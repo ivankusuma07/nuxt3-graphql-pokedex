@@ -19,8 +19,27 @@
 <script lang="ts" setup>
 import { GET_POKEMON_LIST } from '~~/api/pokeList'
 
-const variables = { limit: 110 }
+const props = defineProps({
+  datas: {
+    type: Object,
+    default: {}
+  }
+})
+
+const variables = { limit: 10 }
 const { data } = await useAsyncQuery(GET_POKEMON_LIST, variables)
+
+watch(
+  () => props.datas,
+  () => {
+    // console.log('data pokemon searched')
+    if (props.datas) {
+      // console.log('searched ', props.datas)
+      data.value = props.datas
+      // data = props.datas
+    }
+  }
+)
 </script>
 
 <style lang="postcss">

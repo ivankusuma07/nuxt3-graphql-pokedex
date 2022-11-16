@@ -1,7 +1,9 @@
 <template>
   <div :class="`card ${type}-bg`">
     <div class="poke-img">
-      <img :src="`${JSON.parse(props.datas.image[0].sprites).other.home.front_default}`" width="200" height="200" alt="" />
+      <!-- {{ image }} -->
+      <img v-if="image" :src="image" @error="onError" width="200" height="200" alt="" />
+      <img v-else src="@/assets/img/pokedex_logo.png" style="margin-top: 100px" width="200" height="200" alt="" />
     </div>
 
     <div :class="`card-title ${type}-card-bg`">
@@ -20,6 +22,8 @@
 </template>
 
 <script lang="ts" setup>
+import img from '@/assets/img/pokedex_logo.png'
+
 const props = defineProps({
   datas: {
     type: Object,
@@ -31,6 +35,12 @@ const props = defineProps({
 //   console.log(props.datas)
 // }
 // init()
+
+const image = computed(() => {
+  if (props.datas.image[0].sprites) {
+    return JSON.parse(props.datas.image[0].sprites).other['official-artwork'].front_default
+  }
+})
 const num = computed(() => {
   if (props.datas.order < 10) {
     return `#00${props.datas.order}`
@@ -42,6 +52,12 @@ const num = computed(() => {
     return `#${props.datas.order}`
   }
 })
+
+function onError(e: any) {
+  // e.target.src = 'https://www.foodstation.id/wp-content/uploads/2021/06/3-300x300.png'
+  e.target.src = img
+  e.target.style = 'margin-top:100px;'
+}
 
 const type = computed(() => {
   return props.datas.type[0].pokemon_v2_type.name
@@ -87,6 +103,9 @@ const type = computed(() => {
 
 .poke-img {
   @apply absolute -top-20;
+  &-error {
+    @apply absolute top-10;
+  }
 }
 
 .card-title {
@@ -129,6 +148,14 @@ const type = computed(() => {
   color: var(--fire);
   &-bg {
     background-image: linear-gradient(210deg, var(--fire), 75%, white);
+    background-size: 100% 200%;
+    -webkit-transition: background-position 0.5s;
+    -moz-transition: background-position 0.5s;
+    transition: background-position 0.5s;
+  }
+  &-bg:hover {
+    background-image: linear-gradient(210deg, var(--fire), 90%, white);
+    background-position: 0 100%;
   }
   &-card-bg {
     background-image: linear-gradient(60deg, rgb(71 85 105) 90%, var(--fire));
@@ -138,6 +165,14 @@ const type = computed(() => {
   color: var(--water);
   &-bg {
     background-image: linear-gradient(210deg, var(--water), 75%, white);
+    background-size: 100% 200%;
+    -webkit-transition: background-position 0.5s;
+    -moz-transition: background-position 0.5s;
+    transition: background-position 0.5s;
+  }
+  &-bg:hover {
+    background-image: linear-gradient(210deg, var(--water), 90%, white);
+    background-position: 0 100%;
   }
   &-card-bg {
     background-image: linear-gradient(60deg, rgb(71 85 105) 90%, var(--water));
@@ -147,6 +182,14 @@ const type = computed(() => {
   color: var(--electric);
   &-bg {
     background-image: linear-gradient(210deg, var(--electric), 75%, white);
+    background-size: 100% 200%;
+    -webkit-transition: background-position 0.5s;
+    -moz-transition: background-position 0.5s;
+    transition: background-position 0.5s;
+  }
+  &-bg:hover {
+    background-image: linear-gradient(210deg, var(--electric), 90%, white);
+    background-position: 0 100%;
   }
   &-card-bg {
     background-image: linear-gradient(60deg, rgb(71 85 105) 90%, var(--electric));
@@ -156,6 +199,14 @@ const type = computed(() => {
   color: var(--grass);
   &-bg {
     background-image: linear-gradient(210deg, var(--grass), 75%, white);
+    background-size: 100% 200%;
+    -webkit-transition: background-position 0.5s;
+    -moz-transition: background-position 0.5s;
+    transition: background-position 0.5s;
+  }
+  &-bg:hover {
+    background-image: linear-gradient(210deg, var(--grass), 90%, white);
+    background-position: 0 100%;
   }
   &-card-bg {
     background-image: linear-gradient(60deg, rgb(71 85 105) 90%, var(--grass));
@@ -165,6 +216,14 @@ const type = computed(() => {
   color: var(--ice);
   &-bg {
     background-image: linear-gradient(210deg, var(--ice), 75%, white);
+    background-size: 100% 200%;
+    -webkit-transition: background-position 0.5s;
+    -moz-transition: background-position 0.5s;
+    transition: background-position 0.5s;
+  }
+  &-bg:hover {
+    background-image: linear-gradient(210deg, var(--ice), 90%, white);
+    background-position: 0 100%;
   }
   &-card-bg {
     background-image: linear-gradient(60deg, rgb(71 85 105) 90%, var(--ice));
@@ -174,6 +233,14 @@ const type = computed(() => {
   color: var(--fighting);
   &-bg {
     background-image: linear-gradient(210deg, var(--fighting), 75%, white);
+    background-size: 100% 200%;
+    -webkit-transition: background-position 0.5s;
+    -moz-transition: background-position 0.5s;
+    transition: background-position 0.5s;
+  }
+  &-bg:hover {
+    background-image: linear-gradient(210deg, var(--fighting), 90%, white);
+    background-position: 0 100%;
   }
   &-card-bg {
     background-image: linear-gradient(90deg, rgb(71 85 105) 90%, var(--fighting));
@@ -183,6 +250,14 @@ const type = computed(() => {
   color: var(--poison);
   &-bg {
     background-image: linear-gradient(210deg, var(--poison), 75%, white);
+    background-size: 100% 200%;
+    -webkit-transition: background-position 0.5s;
+    -moz-transition: background-position 0.5s;
+    transition: background-position 0.5s;
+  }
+  &-bg:hover {
+    background-image: linear-gradient(210deg, var(--poison), 90%, white);
+    background-position: 0 100%;
   }
   &-card-bg {
     background-image: linear-gradient(90deg, rgb(71 85 105) 90%, var(--poison));
@@ -192,6 +267,14 @@ const type = computed(() => {
   color: var(--ground);
   &-bg {
     background-image: linear-gradient(210deg, var(--ground), 75%, white);
+    background-size: 100% 200%;
+    -webkit-transition: background-position 0.5s;
+    -moz-transition: background-position 0.5s;
+    transition: background-position 0.5s;
+  }
+  &-bg:hover {
+    background-image: linear-gradient(210deg, var(--ground), 90%, white);
+    background-position: 0 100%;
   }
   &-card-bg {
     background-image: linear-gradient(90deg, rgb(71 85 105) 90%, var(--poison));
@@ -201,6 +284,14 @@ const type = computed(() => {
   color: var(--flying);
   &-bg {
     background-image: linear-gradient(210deg, var(--flying), 75%, white);
+    background-size: 100% 200%;
+    -webkit-transition: background-position 0.5s;
+    -moz-transition: background-position 0.5s;
+    transition: background-position 0.5s;
+  }
+  &-bg:hover {
+    background-image: linear-gradient(210deg, var(--flying), 90%, white);
+    background-position: 0 100%;
   }
   &-card-bg {
     background-image: linear-gradient(90deg, rgb(71 85 105) 90%, var(--flying));
@@ -210,6 +301,14 @@ const type = computed(() => {
   color: var(--psychic);
   &-bg {
     background-image: linear-gradient(210deg, var(--psychic), 75%, white);
+    background-size: 100% 200%;
+    -webkit-transition: background-position 0.5s;
+    -moz-transition: background-position 0.5s;
+    transition: background-position 0.5s;
+  }
+  &-bg:hover {
+    background-image: linear-gradient(210deg, var(--psychic), 90%, white);
+    background-position: 0 100%;
   }
   &-card-bg {
     background-image: linear-gradient(90deg, rgb(71 85 105) 90%, var(--psychic));
@@ -219,6 +318,14 @@ const type = computed(() => {
   color: var(--bug);
   &-bg {
     background-image: linear-gradient(210deg, var(--bug), 75%, white);
+    background-size: 100% 200%;
+    -webkit-transition: background-position 0.5s;
+    -moz-transition: background-position 0.5s;
+    transition: background-position 0.5s;
+  }
+  &-bg:hover {
+    background-image: linear-gradient(210deg, var(--bug), 90%, white);
+    background-position: 0 100%;
   }
   &-card-bg {
     background-image: linear-gradient(90deg, rgb(71 85 105) 90%, var(--bug));
@@ -228,6 +335,14 @@ const type = computed(() => {
   color: var(--rock);
   &-bg {
     background-image: linear-gradient(210deg, var(--rock), 75%, white);
+    background-size: 100% 200%;
+    -webkit-transition: background-position 0.5s;
+    -moz-transition: background-position 0.5s;
+    transition: background-position 0.5s;
+  }
+  &-bg:hover {
+    background-image: linear-gradient(210deg, var(--rock), 90%, white);
+    background-position: 0 100%;
   }
   &-card-bg {
     background-image: linear-gradient(90deg, rgb(71 85 105) 90%, var(--rock));
@@ -238,6 +353,14 @@ const type = computed(() => {
   color: var(--ghost);
   &-bg {
     background-image: linear-gradient(210deg, var(--ghost), 75%, white);
+    background-size: 100% 200%;
+    -webkit-transition: background-position 0.5s;
+    -moz-transition: background-position 0.5s;
+    transition: background-position 0.5s;
+  }
+  &-bg:hover {
+    background-image: linear-gradient(210deg, var(--ghost), 90%, white);
+    background-position: 0 100%;
   }
   &-card-bg {
     background-image: linear-gradient(90deg, rgb(71 85 105) 90%, var(--ghost));
@@ -248,6 +371,14 @@ const type = computed(() => {
   color: var(--dragon);
   &-bg {
     background-image: linear-gradient(210deg, var(--dragon), 75%, white);
+    background-size: 100% 200%;
+    -webkit-transition: background-position 0.5s;
+    -moz-transition: background-position 0.5s;
+    transition: background-position 0.5s;
+  }
+  &-bg:hover {
+    background-image: linear-gradient(210deg, var(--dragon), 90%, white);
+    background-position: 0 100%;
   }
   &-card-bg {
     background-image: linear-gradient(90deg, rgb(71 85 105) 90%, var(--dragon));
@@ -258,6 +389,14 @@ const type = computed(() => {
   color: var(--dark);
   &-bg {
     background-image: linear-gradient(210deg, var(--dark), 75%, white);
+    background-size: 100% 200%;
+    -webkit-transition: background-position 0.5s;
+    -moz-transition: background-position 0.5s;
+    transition: background-position 0.5s;
+  }
+  &-bg:hover {
+    background-image: linear-gradient(210deg, var(--dark), 90%, white);
+    background-position: 0 100%;
   }
   &-card-bg {
     background-image: linear-gradient(90deg, rgb(71 85 105) 90%, var(--dark));
@@ -268,6 +407,14 @@ const type = computed(() => {
   color: var(--grass);
   &-bg {
     background-image: linear-gradient(210deg, var(--steel), 75%, white);
+    background-size: 100% 200%;
+    -webkit-transition: background-position 0.5s;
+    -moz-transition: background-position 0.5s;
+    transition: background-position 0.5s;
+  }
+  &-bg:hover {
+    background-image: linear-gradient(210deg, var(--steel), 90%, white);
+    background-position: 0 100%;
   }
   &-card-bg {
     background-image: linear-gradient(90deg, rgb(71 85 105) 90%, var(--steel));
@@ -278,6 +425,14 @@ const type = computed(() => {
   color: var(--fairy);
   &-bg {
     background-image: linear-gradient(210deg, var(--fairy), 75%, white);
+    background-size: 100% 200%;
+    -webkit-transition: background-position 0.5s;
+    -moz-transition: background-position 0.5s;
+    transition: background-position 0.5s;
+  }
+  &-bg:hover {
+    background-image: linear-gradient(210deg, var(--fairy), 90%, white);
+    background-position: 0 100%;
   }
   &-card-bg {
     background-image: linear-gradient(90deg, rgb(71 85 105) 90%, var(--fairy));
