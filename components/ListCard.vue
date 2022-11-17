@@ -1,17 +1,9 @@
 <template>
   <div>
-    <div class="flex flex-row flex-wrap justify-around">
+    <div class="flex flex-row flex-wrap justify-center gap-10">
       <div v-for="mons in data.pokemon">
         <Card :datas="mons" />
-        <!-- <div class="poke-img">
-          <img :src="`${JSON.parse(mons.image[0].sprites).other['home'].front_default}`" width="200" height="200" alt="" />
-        </div>
-
-        <div class="card-title">
-          <div class="card-poke-text">{{ `#${num}` }} {{ mons.name.charAt(0).toUpperCase() + mons.name.slice(1) }}</div>
-        </div> -->
       </div>
-      <!-- {{ mons.pokemon_v2_pokemonsprites[0].sprites }} -->
     </div>
   </div>
 </template>
@@ -32,11 +24,8 @@ const { data } = await useAsyncQuery(GET_POKEMON_LIST, variables)
 watch(
   () => props.datas,
   () => {
-    // console.log('data pokemon searched')
     if (props.datas) {
-      // console.log('searched ', props.datas)
       data.value = props.datas
-      // data = props.datas
     }
   }
 )

@@ -14,13 +14,9 @@
 
 <script lang="ts" setup>
 import { GET_POKEMON_LIST_BY_NAME, GET_POKEMON_LIST } from '~~/api/pokeList'
-// import lodash from '~~/plugin/lodash'
+
 import _ from 'lodash'
 const searchByName = ref('')
-// const nameFormatted = computed(() => {
-//   return `%${searchByName.value}%`
-// })
-// const variables = { name: nameFormatted.value }
 
 let data = ref([])
 const emit = defineEmits(['data-searched'])
@@ -29,29 +25,8 @@ watch(
   () => {
     console.log(searchByName.value)
     tests(searchByName.value)
-    // let datas
-
-    // // datas =
-    // datas = _.debounce(() => test(searchByName.value), 1000)
-    // datas()
-    // console.log('hehe', datas())
-    // emit('data-searched', datas)
   }
 )
-
-// debounce(() => {
-//   test()
-// }, 1000)
-
-// function debounce(func, timeout = 1000) {
-//   let timer
-//   return (...args) => {
-//     clearTimeout(timer)
-//     timer = setTimeout(() => {
-//       func.apply(this, args)
-//     }, timeout)
-//   }
-// }
 
 async function test(name: string) {
   // console.log('test')
@@ -59,23 +34,17 @@ async function test(name: string) {
   console.log('nama ', name)
   let variables = { name: `%${name}%` }
   const variables2 = { limit: 10 }
-  if (name === null) {
+  if (name === '' || name === null) {
     ;({ data } = await useAsyncQuery(GET_POKEMON_LIST, variables2))
   } else {
     ;({ data } = await useAsyncQuery(GET_POKEMON_LIST_BY_NAME, variables))
   }
-  // variables = { name: `%${name}%` }
-  // if(name !== '')
 
   console.log('data from graphql ', data)
   emit('data-searched', data.value)
 }
 
-const tests = _.debounce(async (value) => {
+const tests = _.debounce(async (value: any) => {
   test(value)
 }, 600)
-
-// console.log('search ', data.value)
-
-// console.log(data)
 </script>
