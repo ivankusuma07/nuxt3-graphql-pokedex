@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container mx-auto">
     <Header />
     <Search @data-searched="searchData" />
     <ListCard :datas="dataSearched" />
