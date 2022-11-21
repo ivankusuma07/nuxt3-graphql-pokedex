@@ -1,5 +1,5 @@
 <template>
-  <TransitionGroup appear tag="div" @before-enter="beforeEnter" @enter="onEnter" class="flex flex-row flex-wrap justify-center gap-10">
+  <TransitionGroup appear tag="div" @before-enter="beforeEnter" @enter="onEnter" class="flex flex-row flex-wrap justify-center gap-10 fade-slow" v-if="show">
     <div v-for="(mons, index) in props.datas" :key="mons.id" :data-index="index">
       <div :class="`card ${mons.type[0].pokemon_v2_type.name}-bg`">
         <div class="poke-img">
@@ -42,6 +42,11 @@
 <script lang="ts" setup>
 import img from '@/assets/img/pokedex_logo.png'
 import { gsap } from 'gsap'
+
+const show = ref(false)
+onMounted(() => {
+  show.value = true
+})
 
 const props = defineProps({
   datas: {
@@ -124,6 +129,16 @@ function onEnter(el, done) {
 }
 .card {
   @apply block p-3 w-80 h-52 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 my-10 mx-auto relative flex flex-row justify-center;
+}
+
+.fade-slow-enter {
+  opacity: 0;
+}
+.fade-slow-enter-active {
+  transition: all 2s ease;
+}
+.fade-slow-enter-to {
+  opacity: 1;
 }
 
 .card:hover {
