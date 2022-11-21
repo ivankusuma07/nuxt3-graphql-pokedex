@@ -28,7 +28,7 @@ watch(
   }
 )
 
-async function test(name: string) {
+async function search(name: string) {
   // console.log('test')
   // name
   console.log('nama ', name)
@@ -45,6 +45,6 @@ async function test(name: string) {
 }
 
 const tests = _.debounce(async (value: any) => {
-  test(value)
+  search(value)
 }, 600)
 </script>

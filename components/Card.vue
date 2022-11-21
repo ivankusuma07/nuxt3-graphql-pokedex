@@ -1,7 +1,25 @@
 <template>
-  <div :class="`card ${type}-bg`">
-    <div class="poke-img">
-      <!-- {{ image }} -->
+  <TransitionGroup appear tag="div" @before-enter="beforeEnter" @enter="onEnter" class="flex flex-row flex-wrap justify-center gap-10">
+    <div v-for="(mons, index) in props.datas" :key="mons.id" :data-index="index">
+      <div :class="`card ${mons.type[0].pokemon_v2_type.name}-bg`">
+        <div class="poke-img">
+          <!-- {{ image }} -->
+          <img v-if="JSON.parse(mons.image[0].sprites).other['official-artwork'].front_default" :src="JSON.parse(mons.image[0].sprites).other['official-artwork'].front_default" @error="onError" width="200" height="200" alt="" />
+          <img v-else src="@/assets/img/pokedex_logo.png" style="margin-top: 100px" width="200" height="200" alt="" />
+        </div>
+        <div :class="`card-title ${mons.type[0].pokemon_v2_type.name}-card-bg`">
+          <div class="card-title-poke-text">
+            <div :class="`${mons.type[0].pokemon_v2_type.name}`">
+              {{ num(mons.id) }}
+            </div>
+            <div class="truncate">
+              {{ mons.name.charAt(0).toUpperCase() + mons.name.slice(1) }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="poke-img">
       <img v-if="image" :src="image" @error="onError" width="200" height="200" alt="" />
       <img v-else src="@/assets/img/pokedex_logo.png" style="margin-top: 100px" width="200" height="200" alt="" />
     </div>
@@ -15,43 +33,34 @@
           {{ props.datas.name.charAt(0).toUpperCase() + props.datas.name.slice(1) }}
         </div>
       </div>
-    </div>
+    </div> -->
 
     <!-- {{ props.datas.pokemon_v2_pokemonsprites[0].sprites }} -->
-  </div>
+  </TransitionGroup>
 </template>
 
 <script lang="ts" setup>
 import img from '@/assets/img/pokedex_logo.png'
+import { gsap } from 'gsap'
 
 const props = defineProps({
   datas: {
-    type: Object,
-    default: {}
+    type: Array,
+    default: []
   }
 })
 
-// const init = async () => {
-//   console.log(props.datas)
-// }
-// init()
-
-const image = computed(() => {
-  if (props.datas.image[0].sprites) {
-    return JSON.parse(props.datas.image[0].sprites).other['official-artwork'].front_default
+const num = (order: number) => {
+  if (order < 10) {
+    return `#00${order}`
   }
-})
-const num = computed(() => {
-  if (props.datas.order < 10) {
-    return `#00${props.datas.order}`
+  if (order < 100) {
+    return `#0${order}`
   }
-  if (props.datas.order < 100) {
-    return `#0${props.datas.order}`
+  if (order >= 100) {
+    return `#${order}`
   }
-  if (props.datas.order >= 100) {
-    return `#${props.datas.order}`
-  }
-})
+}
 
 function onError(e: any) {
   // e.target.src = 'https://www.foodstation.id/wp-content/uploads/2021/06/3-300x300.png'
@@ -59,9 +68,38 @@ function onError(e: any) {
   e.target.style = 'margin-top:100px;'
 }
 
-const type = computed(() => {
-  return props.datas.type[0].pokemon_v2_type.name
-})
+// const type = computed(() => {
+//   let a
+//   a = props.datas.map((item) => item.type[0].pokemon_v2_type.name)
+//   // console.log(a)
+//   return a
+// })
+
+function beforeEnter(el) {
+  console.log('element', el)
+  el.style.opacity = 0
+  el.style.transform = 'translateX(-100px)'
+}
+
+function onEnter(el, done) {
+  console.log('element', el)
+  gsap.to(el, {
+    opacity: 1,
+    x: 0,
+    duration: 0.5,
+    onComplete: done,
+    delay: el.dataset.index * 0.1
+  })
+}
+
+// function onLeave(el, done) {
+//   gsap.to(el, {
+//     opacity: 0,
+//     height: 0,
+//     delay: el.dataset.index * 0.2,
+//     onComplete: done
+//   })
+// }
 </script>
 <style lang="postcss">
 :root {

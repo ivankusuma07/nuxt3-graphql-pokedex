@@ -1,9 +1,9 @@
 <template>
   <div>
     <div class="flex flex-row flex-wrap justify-center gap-10">
-      <div v-for="mons in data.pokemon">
-        <Card :datas="mons" />
-      </div>
+      <!-- <div v-for="mons in data.pokemon" :key="mons.id"> -->
+      <Card :datas="data.pokemon" />
+      <!-- </div> -->
     </div>
   </div>
 </template>

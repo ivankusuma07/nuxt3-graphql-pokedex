@@ -17,5 +17,8 @@
   "volta": {
     "node": "16.17.1",
     "yarn": "1.22.19"
+  },
+  "dependencies": {
+    "gsap": "^3.11.3"
   }
 }
