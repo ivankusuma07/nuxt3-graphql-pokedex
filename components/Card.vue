@@ -1,11 +1,12 @@
 <template>
   <TransitionGroup appear tag="div" @before-enter="beforeEnter" @enter="onEnter" class="flex flex-row flex-wrap justify-center gap-10 fade-slow" v-if="show">
     <div v-for="(mons, index) in props.datas" :key="mons.id" :data-index="index">
+      <!-- <nuxt-link :to="`/detail/${mons.id}`" no-prefetch> -->
       <div :class="`card ${mons.type[0].pokemon_v2_type.name}-bg`">
         <div class="poke-img">
           <!-- {{ image }} -->
           <img v-if="JSON.parse(mons.image[0].sprites).other['official-artwork'].front_default" :src="JSON.parse(mons.image[0].sprites).other['official-artwork'].front_default" @error="onError" width="200" height="200" alt="" />
-          <img v-else src="@/assets/img/pokedex_logo.png" style="margin-top: 100px" width="200" height="200" alt="" />
+          <img v-else data-src="@/assets/img/pokedex_logo.png" style="margin-top: 100px" width="200" height="200" alt="" />
         </div>
         <div :class="`card-title ${mons.type[0].pokemon_v2_type.name}-card-bg`">
           <div class="card-title-poke-text">
@@ -18,6 +19,7 @@
           </div>
         </div>
       </div>
+      <!-- </nuxt-link> -->
     </div>
     <!-- <div class="poke-img">
       <img v-if="image" :src="image" @error="onError" width="200" height="200" alt="" />
@@ -81,13 +83,11 @@ function onError(e: any) {
 // })
 
 function beforeEnter(el) {
-  console.log('element', el)
   el.style.opacity = 0
   el.style.transform = 'translateX(-100px)'
 }
 
 function onEnter(el, done) {
-  console.log('element', el)
   gsap.to(el, {
     opacity: 1,
     x: 0,
@@ -101,7 +101,7 @@ function onEnter(el, done) {
 //   gsap.to(el, {
 //     opacity: 0,
 //     height: 0,
-//     delay: el.dataset.index * 0.2,
+//     delay: el.dataset.index * 0.1,
 //     onComplete: done
 //   })
 // }
@@ -142,7 +142,7 @@ function onEnter(el, done) {
 }
 
 .card:hover {
-  @apply shadow-2xl cursor-pointer;
+  @apply drop-shadow-2xl cursor-pointer;
   .poke-img {
     transform: scale(1.2);
     transition: transform 0.5s ease-in-out;
