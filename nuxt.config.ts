@@ -10,5 +10,12 @@ export default defineNuxtConfig({
         connectToDevTools: true
       }
     }
+  },
+  runtimeConfig:{
+    public: {
+      gtm_id: 'GTM-NX6BJWN',
+      gtm_enabled: true,
+      gtm_debug: true
+    }    
   }
 })
