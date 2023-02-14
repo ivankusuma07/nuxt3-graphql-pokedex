@@ -3,6 +3,7 @@
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
+    "start": "nuxt start",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
@@ -20,6 +21,7 @@
   },
   "dependencies": {
     "@gtm-support/vue-gtm": "^2.0.0",
-    "gsap": "^3.11.3"
+    "gsap": "^3.11.3",
+    "is-docker": "^3.0.0"
   }
 }
