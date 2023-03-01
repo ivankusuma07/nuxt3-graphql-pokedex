@@ -14,8 +14,14 @@
       <div v-for="type in poke.type">
         {{ type.pokemon_v2_type.name }}
       </div>
+      <div style="color: red;"><a href="https://privy.id/terms-of-use-privypass" target="_blank">Privacy and policy</a></div>
       <!-- {{ poke.type.pokemon_v2_type.name }} -->
     </div>
+    <div>
+    
+    </div>
+    <iframe src="https://pokedex-nuxt3-graphql.netlify.app/" style="border:1px solid black;" width="1200" height="600" scrolling="yes"  ></iframe>
+    
 
     <!-- {{ data.pokemon.specy.genus[8].genus }} -->
     <!-- {{ data.pokemon.type.pokemon_v2_type.name }} -->
