@@ -1,14 +1,18 @@
 <template>
+   
   <TransitionGroup appear tag="div" @before-enter="beforeEnter" @enter="onEnter" class="flex flex-row flex-wrap justify-center gap-10 fade-slow" v-if="show">
     <div v-for="(mons, index) in props.datas" :key="mons.id" :data-index="index">
+      <!-- {{ JSON.parse(mons.image[0].sprites).other['official-artwork'].front_default }} -->
       <nuxt-link :to="`/detail/${mons.id}`" no-prefetch>
       <div :class="`card ${mons.type[0].pokemon_v2_type.name}-bg`">
         <div class="poke-img">
           <!-- {{ image }} -->
           <!-- {{ JSON.parse(mons.image[0].sprites).other['official-artwork'].front_default  }} -->
-          <img v-if="JSON.parse(mons.image[0].sprites).other['official-artwork'].front_default" :src="JSON.parse(mons.image[0].sprites).other['official-artwork'].front_default" @error="onError" width="200" height="200" alt="" />
+          <!-- <img v-if="JSON.parse(mons.image[0].sprites).other['official-artwork'].front_default" :src="JSON.parse(mons.image[0].sprites).other['official-artwork'].front_default" @error="onError" width="200" height="200" alt="" /> -->
           <!-- <img :src="`https://unpkg.com/pokeapi-sprites@2.0.2/sprites/pokemon/other/official-artwork/${mons.id}.png`" @error="onError" width="200" height="200" alt="" /> -->
+          <img v-if="JSON.parse(mons.image[0].sprites).other['official-artwork'].front_default" :src="`https://raw.githubusercontent.com/PokeAPI/sprites/master/${ imageReplaceString(JSON.parse(mons.image[0].sprites).other['official-artwork'].front_default) }`" @error="onError" width="200" height="200" alt="" />
           <img v-else data-src="@/assets/img/pokedex_logo.png" style="margin-top: 100px" width="200" height="200" alt="" />
+         
         </div>
         <div :class="`card-title ${mons.type[0].pokemon_v2_type.name}-card-bg`">
           <div class="card-title-poke-text">
@@ -58,6 +62,11 @@ const props = defineProps({
     default: []
   }
 })
+
+const imageReplaceString = (data:any) => {
+  console.log("data",data)
+  return data.replace("media/", "")
+}
 
 const num = (order: number) => {
   if (order < 10) {
