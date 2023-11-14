@@ -16,13 +16,14 @@
           <!-- {{ JSON.parse(mons.image[0].sprites).other['official-artwork'].front_default  }} -->
           <!-- <img v-if="JSON.parse(mons.image[0].sprites).other['official-artwork'].front_default" :src="JSON.parse(mons.image[0].sprites).other['official-artwork'].front_default" @error="onError" width="200" height="200" alt="" /> -->
           <!-- <img :src="`https://unpkg.com/pokeapi-sprites@2.0.2/sprites/pokemon/other/official-artwork/${mons.id}.png`" @error="onError" width="200" height="200" alt="" /> -->
+          <!-- `https://raw.githubusercontent.com/PokeAPI/sprites/master/${imageReplaceString(
+              JSON.parse(mons.image[0].sprites).other['official-artwork'].front_default
+            )}` -->
           <img
             v-if="
               JSON.parse(mons.image[0].sprites).other['official-artwork'].front_default
             "
-            :src="`https://raw.githubusercontent.com/PokeAPI/sprites/master/${imageReplaceString(
-              JSON.parse(mons.image[0].sprites).other['official-artwork'].front_default
-            )}`"
+            :src="JSON.parse(mons.image[0].sprites).other['official-artwork'].front_default"
             @error="onError"
             width="200"
             height="200"
