@@ -14,8 +14,8 @@ import { GET_POKEMON_LIST } from '~~/api/pokeList'
 const props = defineProps({
   datas: {
     type: Object,
-    default: {}
-  }
+    default: {},
+  },
 })
 
 const variables = { limit: 10 }
