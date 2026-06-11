@@ -19,7 +19,6 @@
     "yarn": "1.22.19"
   },
   "dependencies": {
-    "@gtm-support/vue-gtm": "^2.0.0",
     "gsap": "^3.11.3",
     "is-docker": "^3.0.0"
   },

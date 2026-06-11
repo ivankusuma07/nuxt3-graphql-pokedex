@@ -7,10 +7,10 @@
 </template>
 
 <script lang="ts" setup>
-const dataSearched = ref([])
+const dataSearched = ref([]);
 
 function searchData(data) {
-  console.log('data from search', data)
-  dataSearched.value = data
+  console.log("data from search", data);
+  dataSearched.value = data;
 }
 </script>

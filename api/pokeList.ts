@@ -113,11 +113,26 @@ export const GET_DETAIL_POKEMON = gql`
         evolves_from_species_id
         evo: pokemon_v2_evolutionchain {
           id
-          pokemon_v2_pokemonspecies {
+          pokemon_v2_pokemonspecies(order_by: { id: asc }) {
+            id
             name
+            evolves_from_species_id
             mons: pokemon_v2_pokemons {
+              id
               sprite: pokemon_v2_pokemonsprites {
                 sprites
+              }
+            }
+            evo_detail: pokemon_v2_pokemonevolutions {
+              min_level
+              trigger: pokemon_v2_evolutiontrigger {
+                name
+              }
+              item: pokemon_v2_item {
+                name
+              }
+              known_move: pokemon_v2_move {
+                name
               }
             }
           }

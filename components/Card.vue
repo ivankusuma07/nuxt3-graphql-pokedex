@@ -85,7 +85,6 @@ const imageReplaceString = (data: any) => {
 };
 
 const num = (order: number) => {
-  console.log("order", order);
   if (order < 10) {
     return `#00${order}`;
   }
@@ -192,8 +191,8 @@ function onEnter(el, done) {
 .card-title {
   @apply absolute bottom-5;
   @apply block p-2 w-60 h-10 rounded-md shadow-lg;
-  /* background-image: linear-gradient(90deg, rgb(71 85 105) 75%, rgb(31 41 55)); */
-  background-image: linear-gradient(90deg, rgb(71 85 105) 90%, var(--normal));
+  /* background-image: linear-gradient(90deg, var(--card-title-base) 75%, rgb(31 41 55)); */
+  background-image: linear-gradient(90deg, var(--card-title-base) 90%, var(--normal));
   background-size: 200% 100%;
   -webkit-transition: background-position 0.5s;
   -moz-transition: background-position 0.5s;
@@ -222,7 +221,7 @@ function onEnter(el, done) {
     background-position: 0 100%;
   }
   &-card-bg {
-    background-image: linear-gradient(60deg, rgb(71 85 105) 90%, var(--normal));
+    background-image: linear-gradient(60deg, var(--card-title-base) 90%, var(--normal));
   }
 }
 .fire {
@@ -239,7 +238,7 @@ function onEnter(el, done) {
     background-position: 0 100%;
   }
   &-card-bg {
-    background-image: linear-gradient(60deg, rgb(71 85 105) 90%, var(--fire));
+    background-image: linear-gradient(60deg, var(--card-title-base) 90%, var(--fire));
   }
 }
 .water {
@@ -256,7 +255,7 @@ function onEnter(el, done) {
     background-position: 0 100%;
   }
   &-card-bg {
-    background-image: linear-gradient(60deg, rgb(71 85 105) 90%, var(--water));
+    background-image: linear-gradient(60deg, var(--card-title-base) 90%, var(--water));
   }
 }
 .electric {
@@ -273,7 +272,7 @@ function onEnter(el, done) {
     background-position: 0 100%;
   }
   &-card-bg {
-    background-image: linear-gradient(60deg, rgb(71 85 105) 90%, var(--electric));
+    background-image: linear-gradient(60deg, var(--card-title-base) 90%, var(--electric));
   }
 }
 .grass {
@@ -290,7 +289,7 @@ function onEnter(el, done) {
     background-position: 0 100%;
   }
   &-card-bg {
-    background-image: linear-gradient(60deg, rgb(71 85 105) 90%, var(--grass));
+    background-image: linear-gradient(60deg, var(--card-title-base) 90%, var(--grass));
   }
 }
 .ice {
@@ -307,7 +306,7 @@ function onEnter(el, done) {
     background-position: 0 100%;
   }
   &-card-bg {
-    background-image: linear-gradient(60deg, rgb(71 85 105) 90%, var(--ice));
+    background-image: linear-gradient(60deg, var(--card-title-base) 90%, var(--ice));
   }
 }
 .fighting {
@@ -324,7 +323,7 @@ function onEnter(el, done) {
     background-position: 0 100%;
   }
   &-card-bg {
-    background-image: linear-gradient(90deg, rgb(71 85 105) 90%, var(--fighting));
+    background-image: linear-gradient(90deg, var(--card-title-base) 90%, var(--fighting));
   }
 }
 .poison {
@@ -341,7 +340,7 @@ function onEnter(el, done) {
     background-position: 0 100%;
   }
   &-card-bg {
-    background-image: linear-gradient(90deg, rgb(71 85 105) 90%, var(--poison));
+    background-image: linear-gradient(90deg, var(--card-title-base) 90%, var(--poison));
   }
 }
 .ground {
@@ -358,7 +357,7 @@ function onEnter(el, done) {
     background-position: 0 100%;
   }
   &-card-bg {
-    background-image: linear-gradient(90deg, rgb(71 85 105) 90%, var(--poison));
+    background-image: linear-gradient(90deg, var(--card-title-base) 90%, var(--poison));
   }
 }
 .flying {
@@ -375,7 +374,7 @@ function onEnter(el, done) {
     background-position: 0 100%;
   }
   &-card-bg {
-    background-image: linear-gradient(90deg, rgb(71 85 105) 90%, var(--flying));
+    background-image: linear-gradient(90deg, var(--card-title-base) 90%, var(--flying));
   }
 }
 .psychic {
@@ -392,7 +391,7 @@ function onEnter(el, done) {
     background-position: 0 100%;
   }
   &-card-bg {
-    background-image: linear-gradient(90deg, rgb(71 85 105) 90%, var(--psychic));
+    background-image: linear-gradient(90deg, var(--card-title-base) 90%, var(--psychic));
   }
 }
 .bug {
@@ -409,7 +408,7 @@ function onEnter(el, done) {
     background-position: 0 100%;
   }
   &-card-bg {
-    background-image: linear-gradient(90deg, rgb(71 85 105) 90%, var(--bug));
+    background-image: linear-gradient(90deg, var(--card-title-base) 90%, var(--bug));
   }
 }
 .rock {
@@ -426,7 +425,7 @@ function onEnter(el, done) {
     background-position: 0 100%;
   }
   &-card-bg {
-    background-image: linear-gradient(90deg, rgb(71 85 105) 90%, var(--rock));
+    background-image: linear-gradient(90deg, var(--card-title-base) 90%, var(--rock));
   }
 }
 
@@ -444,7 +443,7 @@ function onEnter(el, done) {
     background-position: 0 100%;
   }
   &-card-bg {
-    background-image: linear-gradient(90deg, rgb(71 85 105) 90%, var(--ghost));
+    background-image: linear-gradient(90deg, var(--card-title-base) 90%, var(--ghost));
   }
 }
 
@@ -462,7 +461,7 @@ function onEnter(el, done) {
     background-position: 0 100%;
   }
   &-card-bg {
-    background-image: linear-gradient(90deg, rgb(71 85 105) 90%, var(--dragon));
+    background-image: linear-gradient(90deg, var(--card-title-base) 90%, var(--dragon));
   }
 }
 
@@ -480,7 +479,7 @@ function onEnter(el, done) {
     background-position: 0 100%;
   }
   &-card-bg {
-    background-image: linear-gradient(90deg, rgb(71 85 105) 90%, var(--dark));
+    background-image: linear-gradient(90deg, var(--card-title-base) 90%, var(--dark));
   }
 }
 
@@ -498,7 +497,7 @@ function onEnter(el, done) {
     background-position: 0 100%;
   }
   &-card-bg {
-    background-image: linear-gradient(90deg, rgb(71 85 105) 90%, var(--steel));
+    background-image: linear-gradient(90deg, var(--card-title-base) 90%, var(--steel));
   }
 }
 
@@ -516,7 +515,7 @@ function onEnter(el, done) {
     background-position: 0 100%;
   }
   &-card-bg {
-    background-image: linear-gradient(90deg, rgb(71 85 105) 90%, var(--fairy));
+    background-image: linear-gradient(90deg, var(--card-title-base) 90%, var(--fairy));
   }
 }
 </style>

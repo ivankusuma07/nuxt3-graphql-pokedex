@@ -1,7 +1,9 @@
 <template>
   <div class="detail-page" v-if="poke">
     <div class="detail-container">
-      <nuxt-link to="/" class="back-btn">&larr; Back</nuxt-link>
+      <div class="detail-top-bar">
+        <Button to="/" variant="ghost" size="sm">&larr; Back</Button>
+      </div>
 
       <div :class="`detail-header ${primaryType}-bg`">
         <div class="detail-sprite">
@@ -65,18 +67,61 @@
         </div>
       </section>
 
-      <section class="detail-section" v-if="evolutionChain.length > 1">
+      <section class="detail-section" v-if="pokemonInChain">
         <h2 class="section-title">Evolution Chain</h2>
-        <div class="evo-chain">
-          <div v-for="(evo, i) in evolutionChain" :key="evo.id" class="evo-item">
-            <nuxt-link :to="`/detail/${evo.id}`" class="evo-link">
+        <div class="evo-chain-flow">
+          <div class="evo-node">
+            <nuxt-link :to="`/detail/${pokemonInChain.base.id}`" class="evo-link">
               <div class="evo-img-wrapper">
-                <img :src="evo.sprite" @error="onEvoError" width="96" height="96" alt="" />
+                <img :src="pokemonInChain.base.sprite" @error="onEvoError" width="96" height="96" alt="" />
               </div>
-              <div class="evo-name">{{ evo.name }}</div>
+              <div class="evo-name">{{ pokemonInChain.base.name }}</div>
             </nuxt-link>
-            <div v-if="i < evolutionChain.length - 1" class="evo-arrow">&rarr;</div>
           </div>
+          <template v-if="pokemonInChain.children.length === 1">
+            <template v-for="child in pokemonInChain.children" :key="child.pokemon.id">
+              <div class="evo-condition">
+                <div class="evo-arrow">&darr;</div>
+                <div class="evo-trigger">{{ evoTriggerText(child.evo) }}</div>
+              </div>
+              <div class="evo-node">
+                <nuxt-link :to="`/detail/${child.pokemon.id}`" class="evo-link">
+                  <div class="evo-img-wrapper">
+                    <img :src="child.pokemon.sprite" @error="onEvoError" width="96" height="96" alt="" />
+                  </div>
+                  <div class="evo-name">{{ child.pokemon.name }}</div>
+                </nuxt-link>
+              </div>
+              <template v-for="gc in child.grandchildren" :key="gc.pokemon.id">
+                <div class="evo-condition">
+                  <div class="evo-arrow">&darr;</div>
+                  <div class="evo-trigger">{{ evoTriggerText(gc.evo) }}</div>
+                </div>
+                <div class="evo-node">
+                  <nuxt-link :to="`/detail/${gc.pokemon.id}`" class="evo-link">
+                    <div class="evo-img-wrapper">
+                      <img :src="gc.pokemon.sprite" @error="onEvoError" width="96" height="96" alt="" />
+                    </div>
+                    <div class="evo-name">{{ gc.pokemon.name }}</div>
+                  </nuxt-link>
+                </div>
+              </template>
+            </template>
+          </template>
+          <template v-else>
+            <div class="evo-branch-indicator">&darr;</div>
+            <div class="evo-branch-grid">
+              <div v-for="child in pokemonInChain.children" :key="child.pokemon.id" class="evo-branch-item">
+                <div class="evo-branch-condition">{{ evoTriggerText(child.evo) }}</div>
+                <nuxt-link :to="`/detail/${child.pokemon.id}`" class="evo-link">
+                  <div class="evo-img-wrapper">
+                    <img :src="child.pokemon.sprite" @error="onEvoError" width="80" height="80" alt="" />
+                  </div>
+                  <div class="evo-name evo-branch-name">{{ child.pokemon.name }}</div>
+                </nuxt-link>
+              </div>
+            </div>
+          </template>
         </div>
       </section>
 
@@ -260,18 +305,53 @@ const statLabel = (name: string) => {
   return labels[name] || name
 }
 
-const evolutionChain = computed(() => {
-  if (!poke.value?.specy?.evo?.pokemon_v2_pokemonspecies) return []
-  return poke.value.specy.evo.pokemon_v2_pokemonspecies.map((s: any) => {
-    const mon = s.mons?.[0]
-    const sprites = mon?.sprite?.[0]?.sprites
-    const spriteUrl = sprites?.other?.['official-artwork']?.front_default || img
-    return {
-      id: mon?.id || 0,
-      name: s.name.charAt(0).toUpperCase() + s.name.slice(1),
-      sprite: spriteUrl
+const toPokemon = (s: any) => {
+  const mon = s.mons?.[0]
+  const sprites = mon?.sprite?.[0]?.sprites
+  return {
+    id: mon?.id || s.id,
+    name: s.name.charAt(0).toUpperCase() + s.name.slice(1),
+    sprite: sprites?.other?.['official-artwork']?.front_default || img
+  }
+}
+
+const toEvoDetail = (s: any) => {
+  const d = s.evo_detail?.[0]
+  if (!d) return null
+  return {
+    level: d.min_level,
+    trigger: d.trigger?.name,
+    item: d.item?.name,
+    move: d.known_move?.name
+  }
+}
+
+const pokemonInChain = computed(() => {
+  if (!poke.value?.specy?.evo?.pokemon_v2_pokemonspecies) return null
+  const all = poke.value.specy.evo.pokemon_v2_pokemonspecies
+  if (!all.length) return null
+
+  const map: Record<number, any> = {}
+  for (const s of all) map[s.id] = s
+
+  const base = all.find((s: any) => !s.evolves_from_species_id)
+  if (!base) return { base: toPokemon(all[0]), children: [] }
+
+  const children: any[] = []
+  for (const s of all) {
+    if (s.evolves_from_species_id === base.id) {
+      children.push({
+        pokemon: toPokemon(s),
+        evo: toEvoDetail(s),
+        grandchildren: all.filter((x: any) => x.evolves_from_species_id === s.id).map((x: any) => ({
+          pokemon: toPokemon(x),
+          evo: toEvoDetail(x)
+        }))
+      })
     }
-  }).filter((e: any) => e.id)
+  }
+
+  return { base: toPokemon(base), children }
 })
 
 const typeEffectiveness = computed(() => {
@@ -364,6 +444,50 @@ const formSprite = (f: any) => {
   return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${baseId}.png`
 }
 
+const evoTriggerText = (detail: any) => {
+  if (!detail) return ''
+  if (detail.trigger === 'level-up') {
+    return detail.level ? `Lv. ${detail.level}` : 'Level up'
+  }
+  if (detail.trigger === 'use-item') {
+    return detail.item ? capitalize(detail.item) : 'Use item'
+  }
+  if (detail.trigger === 'trade') {
+    return 'Trade'
+  }
+  if (detail.trigger === 'shed') {
+    return 'Has empty slot in party'
+  }
+  if (detail.trigger === 'spin') {
+    return 'Spin around'
+  }
+  if (detail.trigger === 'tower-of-darkness' || detail.trigger === 'tower-of-waters') {
+    return capitalize(detail.trigger.replace(/-/g, ' '))
+  }
+  if (detail.trigger === 'level-up-with-overworld-rain') {
+    return 'Level up in rain'
+  }
+  if (detail.trigger === 'level-up-night') {
+    return detail.level ? `Lv. ${detail.level} (Night)` : 'Level up at night'
+  }
+  if (detail.trigger === 'level-up-day') {
+    return detail.level ? `Lv. ${detail.level} (Day)` : 'Level up during day'
+  }
+  if (detail.trigger === 'level-up-dark' || detail.trigger === 'level-up-darkly') {
+    return detail.level ? `Lv. ${detail.level} (Dark)` : 'Level up in dark place'
+  }
+  if (detail.trigger === 'level-up-rainy' || detail.trigger === 'level-up-with-overworld-rain') {
+    return detail.level ? `Lv. ${detail.level} (Rain)` : 'Level up in rain'
+  }
+  if (detail.trigger === 'other') {
+    if (detail.move) return `Learn ${capitalize(detail.move)}`
+    if (detail.item) return capitalize(detail.item)
+    return 'Special condition'
+  }
+  if (detail.level) return `Lv. ${detail.level}`
+  return capitalize(detail.trigger?.replace(/-/g, ' ') || '')
+}
+
 const capitalize = (s: string) => {
   if (!s) return ''
   return s.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
@@ -389,17 +513,17 @@ function onEvoError(e: any) {
 <style lang="postcss">
 .detail-page {
   @apply min-h-screen flex justify-center items-start py-10 px-4;
-  background: #1a1a2e;
+  background: var(--bg-primary);
 }
 
 .detail-container {
   @apply w-full max-w-2xl mx-auto rounded-2xl overflow-hidden shadow-2xl;
-  background: #16213e;
+  background: var(--bg-secondary);
+  box-shadow: 0 0 30px var(--shadow);
 }
 
-.back-btn {
-  @apply inline-block px-4 py-2 text-white text-sm no-underline;
-  @apply hover:opacity-80 transition-opacity;
+.detail-top-bar {
+  @apply flex items-center px-2 pt-1;
 }
 
 .detail-header {
@@ -418,16 +542,17 @@ function onEvoError(e: any) {
 
 .detail-id {
   @apply text-lg font-bold mb-1;
-  color: #a0a0b0;
+  color: var(--text-secondary);
 }
 
 .detail-name {
-  @apply text-3xl font-bold text-white mb-2;
+  @apply text-3xl font-bold mb-2;
+  color: var(--text-primary);
 }
 
 .detail-genus {
   @apply text-base mb-4;
-  color: #a0a0b0;
+  color: var(--text-secondary);
 }
 
 .detail-types {
@@ -448,20 +573,22 @@ function onEvoError(e: any) {
 
 .measure-label {
   @apply text-xs uppercase tracking-wider;
-  color: #a0a0b0;
+  color: var(--text-secondary);
 }
 
 .measure-value {
-  @apply text-lg font-semibold text-white;
+  @apply text-lg font-semibold;
+  color: var(--text-primary);
 }
 
 .detail-section {
   @apply px-6 py-5 border-t;
-  border-color: #2a2a4a;
+  border-color: var(--border-color);
 }
 
 .section-title {
-  @apply text-lg font-bold text-white mb-4;
+  @apply text-lg font-bold mb-4;
+  color: var(--text-primary);
 }
 
 .stats-grid {
@@ -474,16 +601,17 @@ function onEvoError(e: any) {
 
 .stat-label {
   @apply w-10 text-sm font-semibold text-right;
-  color: #a0a0b0;
+  color: var(--text-secondary);
 }
 
 .stat-value {
-  @apply w-8 text-sm font-bold text-white text-right;
+  @apply w-8 text-sm font-bold text-right;
+  color: var(--text-primary);
 }
 
 .stat-bar-bg {
   @apply flex-1 h-3 rounded-full overflow-hidden;
-  background: #2a2a4a;
+  background: var(--bg-stat-bar);
 }
 
 .stat-bar-fill {
@@ -493,7 +621,7 @@ function onEvoError(e: any) {
 
 .stat-total {
   @apply text-sm text-right mt-2;
-  color: #a0a0b0;
+  color: var(--text-secondary);
 }
 
 .abilities-list {
@@ -502,24 +630,25 @@ function onEvoError(e: any) {
 
 .ability-item {
   @apply px-4 py-2 rounded-lg text-sm;
-  background: #1a1a2e;
+  background: var(--bg-primary);
 }
 
 .ability-name {
-  @apply text-white font-semibold;
+  @apply font-semibold;
+  color: var(--text-primary);
 }
 
 .ability-hidden {
   @apply text-xs ml-1;
-  color: #a0a0b0;
+  color: var(--text-secondary);
 }
 
-.evo-chain {
-  @apply flex justify-center items-center flex-wrap gap-3;
+.evo-chain-flow {
+  @apply flex flex-col items-center gap-1;
 }
 
-.evo-item {
-  @apply flex items-center gap-3;
+.evo-node {
+  @apply flex flex-col items-center;
 }
 
 .evo-link {
@@ -528,7 +657,7 @@ function onEvoError(e: any) {
 
 .evo-img-wrapper {
   @apply p-2 rounded-full;
-  background: #1a1a2e;
+  background: var(--bg-evo-circle);
 }
 
 .evo-img-wrapper img {
@@ -536,12 +665,47 @@ function onEvoError(e: any) {
 }
 
 .evo-name {
-  @apply text-sm text-white mt-1 text-center;
+  @apply text-sm mt-1 text-center font-semibold;
+  color: var(--text-primary);
+}
+
+.evo-condition {
+  @apply flex flex-col items-center py-1;
 }
 
 .evo-arrow {
-  @apply text-2xl;
-  color: #a0a0b0;
+  @apply text-lg leading-none;
+  color: var(--text-secondary);
+}
+
+.evo-trigger {
+  @apply text-xs font-semibold mt-1 px-3 py-1 rounded-full;
+  color: #ffd700;
+  background: rgba(255, 215, 0, 0.1);
+}
+
+.evo-branch-indicator {
+  @apply text-center text-lg py-1;
+  color: var(--text-secondary);
+}
+
+.evo-branch-grid {
+  @apply flex flex-wrap justify-center gap-4 mt-2;
+}
+
+.evo-branch-item {
+  @apply flex flex-col items-center;
+}
+
+.evo-branch-condition {
+  @apply text-xs font-semibold mb-2 px-2 py-1 rounded-full text-center;
+  color: #ffd700;
+  background: rgba(255, 215, 0, 0.1);
+  max-width: 120px;
+}
+
+.evo-branch-name {
+  @apply text-xs;
 }
 
 .effectiveness-grid {
@@ -554,7 +718,7 @@ function onEvoError(e: any) {
 
 .eff-double-weak { background: #e74c3c; color: #fff; }
 .eff-weak { background: #e67e22; color: #fff; }
-.eff-normal { background: #2a2a4a; color: #a0a0b0; }
+.eff-normal { background: var(--bg-stat-bar); color: var(--text-secondary); }
 .eff-resist { background: #27ae60; color: #fff; }
 .eff-immune { background: #7f8c8d; color: #fff; }
 
@@ -576,13 +740,14 @@ function onEvoError(e: any) {
 
 .moves-table th {
   @apply px-3 py-2 text-xs uppercase tracking-wider font-semibold;
-  color: #a0a0b0;
-  border-bottom: 1px solid #2a2a4a;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .moves-table td {
-  @apply px-3 py-2 text-white;
-  border-bottom: 1px solid #1a1a2e;
+  @apply px-3 py-2;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--bg-primary);
 }
 
 .move-type {
@@ -591,7 +756,7 @@ function onEvoError(e: any) {
 
 .flavor-text {
   @apply text-sm leading-relaxed;
-  color: #c0c0d0;
+  color: var(--text-secondary);
 }
 
 .breeding-grid {
@@ -604,11 +769,12 @@ function onEvoError(e: any) {
 
 .breeding-label {
   @apply text-xs uppercase tracking-wider;
-  color: #a0a0b0;
+  color: var(--text-secondary);
 }
 
 .breeding-value {
-  @apply text-sm font-semibold text-white;
+  @apply text-sm font-semibold;
+  color: var(--text-primary);
 }
 
 .forms-grid {
@@ -617,7 +783,7 @@ function onEvoError(e: any) {
 
 .form-item {
   @apply flex flex-col items-center p-3 rounded-lg;
-  background: #1a1a2e;
+  background: var(--bg-primary);
 }
 
 .form-item img {
@@ -625,7 +791,8 @@ function onEvoError(e: any) {
 }
 
 .form-name {
-  @apply text-sm text-white text-center mt-1 capitalize;
+  @apply text-sm text-center mt-1 capitalize;
+  color: var(--text-primary);
 }
 
 .form-badge {
