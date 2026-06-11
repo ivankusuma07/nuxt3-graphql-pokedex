@@ -6,16 +6,16 @@ export default defineNuxtConfig({
   apollo: {
     clients: {
       default: {
-        httpEndpoint: 'https://beta.pokeapi.co/graphql/v1beta',
+        httpEndpoint: 'https://beta.pokeapi.co/graphql/v1beta2',
         connectToDevTools: true
       }
     }
   },
-  runtimeConfig:{
-    public: {
-      gtm_id: 'GTM-NX6BJWN',
-      gtm_enabled: true,
-      gtm_debug: true
-    }    
-  }
+  // runtimeConfig:{
+  //   public: {
+  //     gtm_id: 'GTM-NX6BJWN',
+  //     gtm_enabled: true,
+  //     gtm_debug: true
+  //   }    
+  // }
 })
